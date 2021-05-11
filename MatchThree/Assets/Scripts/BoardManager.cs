@@ -28,6 +28,8 @@ public class BoardManager : MonoBehaviour
 
     #endregion
 
+    private int combo;
+
     [Header("Board")]
     public Vector2Int size;
     public Vector2 offsetTile;
@@ -55,6 +57,8 @@ public class BoardManager : MonoBehaviour
     {
         IsProcessing = true;
         ProcessMatches();
+
+        combo = 0;
     }
 
     #region Match
@@ -67,10 +71,14 @@ public class BoardManager : MonoBehaviour
         if (matchingTiles == null || matchingTiles.Count == 0)
         {
             IsProcessing = false;
+
             return;
         }
 
         StartCoroutine(ClearMatches(matchingTiles, ProcessDrop));
+
+        combo++;
+        ScoreManager.Instance.IncrementCurrentScore(matchingTiles.Count, combo);
     }
 
     private IEnumerator ClearMatches(List<TileController> matchingTiles, System.Action onCompleted)
